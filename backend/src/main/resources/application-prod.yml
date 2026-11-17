@@ -1,0 +1,18 @@
+server:
+  port: ${PORT:8081}
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:travel_planner}}
+    username: ${SPRING_DATASOURCE_USERNAME:travel_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:travel_secure_pass_2026}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true

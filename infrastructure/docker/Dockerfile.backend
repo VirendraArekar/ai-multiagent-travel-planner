@@ -1,0 +1,31 @@
+# Multi-stage Dockerfile for Spring Boot 3.4.2
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+WORKDIR /workspace/app
+
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
+
+# Build production jar skipping test during container build
+RUN mvn clean package -DskipTests
+
+# Production runner image
+FROM eclipse-temurin:21-jre-noble AS runner
+WORKDIR /app
+
+# Add non-root application user
+RUN groupadd -r appgroup && useradd -r -g appgroup -d /app appuser
+
+# Copy application jar from build stage
+COPY --from=build /workspace/app/target/*.jar /app/app.jar
+
+# Configuration environment variables
+ENV SPRING_PROFILES_ACTIVE=prod \
+    JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0 -XX:+EnableDynamicAgentLoading" \
+    SERVER_PORT=8081
+
+EXPOSE 8081
+
+USER appuser
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]
