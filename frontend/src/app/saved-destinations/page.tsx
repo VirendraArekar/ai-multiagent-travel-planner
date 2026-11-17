@@ -15,12 +15,64 @@ import {
 import { api } from '@/lib/api';
 import { Destination } from '@/types';
 import { useToast } from '@/context/ToastContext';
+import DestinationArtwork from '@/components/common/DestinationArtwork';
+
+const INITIAL_SAVED: Destination[] = [
+  {
+    id: 'dest-paris',
+    name: 'Paris',
+    country: 'France',
+    city: 'Paris',
+    heroImageUrl: '/images/paris.svg',
+    averageDailyBudgetUsd: 180,
+    currency: 'EUR',
+    bestTimeToVisit: 'April - October',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'Iconic world capital of art, gastronomy, and historic architectural majesty.',
+    tags: ['culture', 'romantic', 'art', 'france'],
+    safetyScore: 94
+  },
+  {
+    id: 'dest-tokyo',
+    name: 'Tokyo',
+    country: 'Japan',
+    city: 'Tokyo',
+    heroImageUrl: '/images/tokyo.svg',
+    averageDailyBudgetUsd: 150,
+    currency: 'JPY',
+    bestTimeToVisit: 'March - May & Sept - Nov',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'Ultramodern neon skyscrapers juxtaposed with historic temples and Michelin dining.',
+    tags: ['modern', 'tech', 'culture', 'japan'],
+    safetyScore: 98
+  },
+  {
+    id: 'dest-bali',
+    name: 'Bali',
+    country: 'Indonesia',
+    city: 'Denpasar',
+    heroImageUrl: '/images/bali.svg',
+    averageDailyBudgetUsd: 70,
+    currency: 'IDR',
+    bestTimeToVisit: 'May - September',
+    safetyRating: 'SAFE',
+    popular: true,
+    featured: true,
+    description: 'Tropical paradise of tiered emerald rice paddies, spiritual sea temples, and surf beaches.',
+    tags: ['beach', 'wellness', 'nature', 'indonesia'],
+    safetyScore: 91
+  }
+];
 
 export default function SavedDestinationsPage() {
   const { toast } = useToast();
-  const [destinations, setDestinations] = useState<Destination[]>([]);
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [destinations, setDestinations] = useState<Destination[]>(INITIAL_SAVED);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(['dest-paris', 'dest-tokyo', 'dest-bali']);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -91,13 +143,11 @@ export default function SavedDestinationsPage() {
               className="group bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:border-rose-800/40 transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="relative h-56 w-full bg-slate-100 dark:bg-[#0d0608]">
-                  <Image
-                    src={dest.heroImageUrl || 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80'}
-                    alt={dest.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                <div className="relative h-56 w-full bg-slate-100 dark:bg-[#0d0608] overflow-hidden">
+                  <DestinationArtwork
+                    destination={dest.name}
+                    title={dest.description}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   <button
                     type="button"

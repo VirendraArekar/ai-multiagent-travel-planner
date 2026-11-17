@@ -20,13 +20,68 @@ import {
 import { api } from '@/lib/api';
 import { TripSummary } from '@/types';
 import { useToast } from '@/context/ToastContext';
+import DestinationArtwork from '@/components/common/DestinationArtwork';
+
+const INITIAL_TRIPS: TripSummary[] = [
+  {
+    id: 'trip-paris-1',
+    title: 'Romantic Paris Getaway',
+    origin: 'New York (JFK)',
+    destination: 'Paris, France',
+    startDate: '2026-06-10',
+    endDate: '2026-06-15',
+    totalDays: 5,
+    travelType: 'COUPLE',
+    status: 'PLANNED',
+    heroImageUrl: '/images/paris.svg',
+    budgetLimit: 2500,
+    currency: 'EUR',
+    totalEstimatedCost: 2180,
+    totalActivitiesCount: 15,
+    shareToken: 'paris-share-2026',
+  },
+  {
+    id: 'trip-tokyo-2',
+    title: 'Tokyo Cherry Blossom Expedition',
+    origin: 'San Francisco (SFO)',
+    destination: 'Tokyo, Japan',
+    startDate: '2026-04-02',
+    endDate: '2026-04-09',
+    totalDays: 7,
+    travelType: 'SOLO',
+    status: 'PLANNED',
+    heroImageUrl: '/images/tokyo.svg',
+    budgetLimit: 3200,
+    currency: 'USD',
+    totalEstimatedCost: 2850,
+    totalActivitiesCount: 22,
+    shareToken: 'tokyo-share-2026',
+  },
+  {
+    id: 'trip-bali-3',
+    title: 'Bali Tropical Wellness Retreat',
+    origin: 'London (LHR)',
+    destination: 'Bali, Indonesia',
+    startDate: '2026-08-14',
+    endDate: '2026-08-22',
+    totalDays: 8,
+    travelType: 'RELAXATION',
+    status: 'PLANNED',
+    heroImageUrl: '/images/bali.svg',
+    budgetLimit: 2800,
+    currency: 'USD',
+    totalEstimatedCost: 2470,
+    totalActivitiesCount: 18,
+    shareToken: 'bali-share-2026',
+  }
+];
 
 export default function TripsPage() {
   const { toast } = useToast();
-  const [trips, setTrips] = useState<TripSummary[]>([]);
+  const [trips, setTrips] = useState<TripSummary[]>(INITIAL_TRIPS);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -144,13 +199,11 @@ export default function TripsPage() {
               className="group bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:border-rose-800/40 transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="relative h-48 w-full bg-slate-100 dark:bg-[#0d0608]">
-                  <Image
-                    src={trip.heroImageUrl || 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80'}
-                    alt={trip.destination}
-                    fill
-                    className="object-cover group-hover:scale-105 transition duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                <div className="relative h-48 w-full bg-slate-100 dark:bg-[#0d0608] overflow-hidden">
+                  <DestinationArtwork
+                    destination={trip.destination}
+                    title={trip.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                   />
                   <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white/95 dark:bg-[#160a0f]/95 text-rose-900 dark:text-rose-200 border border-rose-200 dark:border-rose-900/40 backdrop-blur-md">
                     {trip.totalDays} Days

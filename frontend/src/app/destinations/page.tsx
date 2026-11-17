@@ -18,13 +18,113 @@ import {
 import { api } from '@/lib/api';
 import { Destination } from '@/types';
 import { useToast } from '@/context/ToastContext';
+import DestinationArtwork from '@/components/common/DestinationArtwork';
+
+const INITIAL_DESTINATIONS: Destination[] = [
+  {
+    id: 'dest-paris',
+    name: 'Paris',
+    country: 'France',
+    city: 'Paris',
+    heroImageUrl: '/images/paris.svg',
+    averageDailyBudgetUsd: 180,
+    currency: 'EUR',
+    bestTimeToVisit: 'April - October',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'Iconic world capital of art, gastronomy, and historic architectural majesty.',
+    tags: ['culture', 'romantic', 'art', 'france'],
+    safetyScore: 94
+  },
+  {
+    id: 'dest-tokyo',
+    name: 'Tokyo',
+    country: 'Japan',
+    city: 'Tokyo',
+    heroImageUrl: '/images/tokyo.svg',
+    averageDailyBudgetUsd: 150,
+    currency: 'JPY',
+    bestTimeToVisit: 'March - May & Sept - Nov',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'Ultramodern neon skyscrapers juxtaposed with historic temples and Michelin dining.',
+    tags: ['modern', 'tech', 'culture', 'japan'],
+    safetyScore: 98
+  },
+  {
+    id: 'dest-bali',
+    name: 'Bali',
+    country: 'Indonesia',
+    city: 'Denpasar',
+    heroImageUrl: '/images/bali.svg',
+    averageDailyBudgetUsd: 70,
+    currency: 'IDR',
+    bestTimeToVisit: 'May - September',
+    safetyRating: 'SAFE',
+    popular: true,
+    featured: true,
+    description: 'Tropical paradise of tiered emerald rice paddies, spiritual sea temples, and surf beaches.',
+    tags: ['beach', 'wellness', 'nature', 'indonesia'],
+    safetyScore: 91
+  },
+  {
+    id: 'dest-rome',
+    name: 'Rome',
+    country: 'Italy',
+    city: 'Rome',
+    heroImageUrl: '/images/paris.svg',
+    averageDailyBudgetUsd: 160,
+    currency: 'EUR',
+    bestTimeToVisit: 'April - June',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'The Eternal City with gladiatorial amphitheaters, Renaissance wonders, and vibrant piazzas.',
+    tags: ['history', 'architecture', 'italy'],
+    safetyScore: 92
+  },
+  {
+    id: 'dest-dubai',
+    name: 'Dubai',
+    country: 'United Arab Emirates',
+    city: 'Dubai',
+    heroImageUrl: '/images/tokyo.svg',
+    averageDailyBudgetUsd: 210,
+    currency: 'AED',
+    bestTimeToVisit: 'November - March',
+    safetyRating: 'VERY_SAFE',
+    popular: true,
+    featured: true,
+    description: 'Futuristic architectural records, golden sand dunes, luxury shopping, and marina promenades.',
+    tags: ['luxury', 'shopping', 'uae'],
+    safetyScore: 96
+  },
+  {
+    id: 'dest-goa',
+    name: 'Goa',
+    country: 'India',
+    city: 'Panaji',
+    heroImageUrl: '/images/bali.svg',
+    averageDailyBudgetUsd: 60,
+    currency: 'INR',
+    bestTimeToVisit: 'November - February',
+    safetyRating: 'SAFE',
+    popular: true,
+    featured: true,
+    description: 'Sun-drenched coastal haven with Portuguese heritage churches and bohemian beach shacks.',
+    tags: ['beach', 'party', 'india'],
+    safetyScore: 89
+  }
+];
 
 export default function DestinationsPage() {
   const { toast } = useToast();
-  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [destinations, setDestinations] = useState<Destination[]>(INITIAL_DESTINATIONS);
   const [search, setSearch] = useState('');
   const [selectedTag, setSelectedTag] = useState('ALL');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
@@ -144,12 +244,10 @@ export default function DestinationsPage() {
               >
                 <div>
                   <div className="relative h-48 w-full bg-rose-50 dark:bg-[#1a0c12] overflow-hidden">
-                    <Image
-                      src={dest.heroImageUrl || 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=600&q=80'}
-                      alt={dest.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition duration-500"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    <DestinationArtwork
+                      destination={dest.name}
+                      title={dest.description}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
                     <button
                       type="button"

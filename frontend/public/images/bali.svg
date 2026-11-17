@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="baliSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4c0519"/>
+      <stop offset="40%" stop-color="#9f1239"/>
+      <stop offset="70%" stop-color="#e11d48"/>
+      <stop offset="100%" stop-color="#fed7aa"/>
+    </linearGradient>
+    <linearGradient id="seaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#881337"/>
+      <stop offset="50%" stop-color="#4c0519"/>
+      <stop offset="100%" stop-color="#1e040a"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#baliSky)"/>
+  <circle cx="400" cy="310" r="110" fill="#fef08a" opacity="0.9"/>
+  <!-- Ocean -->
+  <rect y="360" width="800" height="140" fill="url(#seaGrad)"/>
+  <!-- Sun reflection ripples -->
+  <ellipse cx="400" cy="380" rx="90" ry="3" fill="#fed7aa" opacity="0.7"/>
+  <ellipse cx="400" cy="405" rx="140" ry="3.5" fill="#fef08a" opacity="0.6"/>
+  <ellipse cx="400" cy="435" rx="180" ry="4" fill="#fed7aa" opacity="0.4"/>
+  <!-- Balinese Candi Bentar (Split Gateway) Silhouette -->
+  <!-- Left Wing -->
+  <path d="M300,380 L350,380 L350,180 L335,210 L335,240 L315,280 L315,310 L290,350 L290,380 Z" fill="#14030b"/>
+  <!-- Right Wing -->
+  <path d="M500,380 L450,380 L450,180 L465,210 L465,240 L485,280 L485,310 L510,350 L510,380 Z" fill="#14030b"/>
+  <!-- Palm Trees Left -->
+  <path d="M60,450 Q90,320 140,240" stroke="#12020a" stroke-width="8" fill="none"/>
+  <path d="M140,240 Q110,210 60,225 M140,240 Q150,200 170,185 M140,240 Q180,220 220,230 M140,240 Q180,260 210,285 M140,240 Q140,280 120,310" stroke="#12020a" stroke-width="4" fill="none"/>
+  <!-- Palm Trees Right -->
+  <path d="M720,460 Q690,330 650,250" stroke="#12020a" stroke-width="7" fill="none"/>
+  <path d="M650,250 Q680,220 730,235 M650,250 Q640,210 620,195 M650,250 Q610,230 570,240 M650,250 Q610,270 580,295" stroke="#12020a" stroke-width="4" fill="none"/>
+  <text x="35" y="65" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="900" fill="#ffffff" letter-spacing="1.5">BALI, INDONESIA</text>
+  <text x="35" y="92" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#fecdd3" letter-spacing="0.5">Island of the Gods • Beaches, Waterfalls & Wellness</text>
+</svg>

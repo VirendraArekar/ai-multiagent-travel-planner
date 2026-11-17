@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Compass,
   Calendar,
@@ -23,12 +22,78 @@ import {
 import { api } from '@/lib/api';
 import { TripSummary, AgentMonitoringStats } from '@/types';
 import { useToast } from '@/context/ToastContext';
+import DestinationArtwork from '@/components/common/DestinationArtwork';
+
+const INITIAL_TRIPS: TripSummary[] = [
+  {
+    id: 'trip-paris-1',
+    title: 'Romantic Paris Getaway',
+    origin: 'New York (JFK)',
+    destination: 'Paris, France',
+    startDate: '2026-06-10',
+    endDate: '2026-06-15',
+    totalDays: 5,
+    travelType: 'COUPLE',
+    status: 'PLANNED',
+    heroImageUrl: '/images/paris.svg',
+    budgetLimit: 2500,
+    currency: 'EUR',
+    totalEstimatedCost: 2180,
+    totalActivitiesCount: 15,
+    shareToken: 'paris-share-2026',
+  },
+  {
+    id: 'trip-tokyo-2',
+    title: 'Tokyo Cherry Blossom Expedition',
+    origin: 'San Francisco (SFO)',
+    destination: 'Tokyo, Japan',
+    startDate: '2026-04-02',
+    endDate: '2026-04-09',
+    totalDays: 7,
+    travelType: 'SOLO',
+    status: 'PLANNED',
+    heroImageUrl: '/images/tokyo.svg',
+    budgetLimit: 3200,
+    currency: 'USD',
+    totalEstimatedCost: 2850,
+    totalActivitiesCount: 22,
+    shareToken: 'tokyo-share-2026',
+  },
+  {
+    id: 'trip-bali-3',
+    title: 'Bali Tropical Wellness Retreat',
+    origin: 'London (LHR)',
+    destination: 'Bali, Indonesia',
+    startDate: '2026-08-14',
+    endDate: '2026-08-22',
+    totalDays: 8,
+    travelType: 'RELAXATION',
+    status: 'PLANNED',
+    heroImageUrl: '/images/bali.svg',
+    budgetLimit: 2800,
+    currency: 'USD',
+    totalEstimatedCost: 2470,
+    totalActivitiesCount: 18,
+    shareToken: 'bali-share-2026',
+  }
+];
 
 export default function DashboardPage() {
   const { toast } = useToast();
-  const [trips, setTrips] = useState<TripSummary[]>([]);
-  const [stats, setStats] = useState<AgentMonitoringStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [trips, setTrips] = useState<TripSummary[]>(INITIAL_TRIPS);
+  const [stats, setStats] = useState<AgentMonitoringStats | null>({
+    totalAgents: 11,
+    activeAgents: 11,
+    totalTasksExecuted: 842,
+    completedTasks: 825,
+    failedTasks: 2,
+    runningTasks: 0,
+    averageExecutionDurationMs: 420,
+    totalTokensConsumed: 1240000,
+    totalEstimatedCostUsd: 0.32,
+    tasksByAgent: {},
+  });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -37,12 +102,23 @@ export default function DashboardPage() {
           api.getTrips(),
           api.getAgentStats(),
         ]);
-        setTrips(tripsData);
-        setStats(statsData);
+        if (tripsData && tripsData.length > 0) {
+          // Ensure trips with valid images
+          const formatted = tripsData.map((t, idx) => ({
+            ...t,
+            heroImageUrl: t.heroImageUrl?.startsWith('/images/')
+              ? t.heroImageUrl
+              : idx === 0
+              ? '/images/paris.svg'
+              : idx === 1
+              ? '/images/tokyo.svg'
+              : '/images/bali.svg',
+          }));
+          setTrips(formatted);
+        }
+        if (statsData) setStats(statsData);
       } catch (err) {
         console.error('Failed to load dashboard data', err);
-      } finally {
-        setLoading(false);
       }
     }
     loadData();
@@ -88,7 +164,7 @@ export default function DashboardPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl p-5 shadow-2xs transition-colors">
+        <div className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl p-5 shadow-2xs transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-rose-900/60 dark:text-rose-400/60 uppercase tracking-wider">Active Trips</span>
             <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 flex items-center justify-center shadow-2xs">
@@ -97,7 +173,7 @@ export default function DashboardPage() {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-black text-rose-950 dark:text-rose-100">
-              {loading ? '...' : trips.length}
+              {trips.length}
             </span>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-0.5">
               <TrendingUp className="w-3 h-3" /> +1 this month
@@ -106,7 +182,7 @@ export default function DashboardPage() {
           <p className="mt-1 text-xs text-rose-900/50 dark:text-rose-400/50 font-medium">Across global destinations</p>
         </div>
 
-        <div className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl p-5 shadow-2xs transition-colors">
+        <div className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl p-5 shadow-2xs transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-rose-900/60 dark:text-rose-400/60 uppercase tracking-wider">Budget Managed</span>
             <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 flex items-center justify-center shadow-2xs">
@@ -115,7 +191,7 @@ export default function DashboardPage() {
           </div>
           <div className="mt-3 flex items-baseline gap-2">
             <span className="text-2xl font-black text-rose-950 dark:text-rose-100">
-              ${loading ? '...' : totalBudget.toLocaleString()}
+              ${totalBudget.toLocaleString()}
             </span>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
               ${savings.toLocaleString()} saved
@@ -124,7 +200,7 @@ export default function DashboardPage() {
           <p className="mt-1 text-xs text-rose-900/50 dark:text-rose-400/50 font-medium">Optimized by Critic Agent</p>
         </div>
 
-        <div className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl p-5 shadow-2xs transition-colors">
+        <div className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl p-5 shadow-2xs transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-rose-900/60 dark:text-rose-400/60 uppercase tracking-wider">Confirmed Bookings</span>
             <div className="w-9 h-9 rounded-xl bg-rose-100/60 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 flex items-center justify-center shadow-2xs">
@@ -138,7 +214,7 @@ export default function DashboardPage() {
           <p className="mt-1 text-xs text-rose-900/50 dark:text-rose-400/50 font-medium">Flights, hotels & activities</p>
         </div>
 
-        <div className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl p-5 shadow-2xs transition-colors">
+        <div className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl p-5 shadow-2xs transition-colors">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold text-rose-900/60 dark:text-rose-400/60 uppercase tracking-wider">Multi-Agent Engine</span>
             <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-300 flex items-center justify-center shadow-2xs">
@@ -162,7 +238,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Link
           href="/planner"
-          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-rose-100/90 dark:border-rose-950/80 rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
+          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-slate-200 dark:border-[#33151f] rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
         >
           <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Sparkles className="w-5 h-5 text-rose-700 dark:text-rose-400" />
@@ -173,7 +249,7 @@ export default function DashboardPage() {
 
         <Link
           href="/destinations"
-          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-rose-100/90 dark:border-rose-950/80 rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
+          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-slate-200 dark:border-[#33151f] rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
         >
           <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Compass className="w-5 h-5 text-rose-700 dark:text-rose-400" />
@@ -184,7 +260,7 @@ export default function DashboardPage() {
 
         <Link
           href="/flights"
-          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-rose-100/90 dark:border-rose-950/80 rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
+          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-slate-200 dark:border-[#33151f] rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
         >
           <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Plane className="w-5 h-5 text-rose-700 dark:text-rose-400" />
@@ -195,7 +271,7 @@ export default function DashboardPage() {
 
         <Link
           href="/hotels"
-          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-rose-100/90 dark:border-rose-950/80 rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
+          className="group p-4 bg-white dark:bg-[#160a0f] hover:border-rose-400 dark:hover:border-rose-700 border border-slate-200 dark:border-[#33151f] rounded-2xl transition-all shadow-2xs hover:shadow-md flex flex-col items-start"
         >
           <div className="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
             <Building className="w-5 h-5 text-rose-700 dark:text-rose-400" />
@@ -224,107 +300,80 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-4">
-            {loading ? (
-              <div className="p-12 text-center text-rose-900/50 dark:text-rose-400/50 font-medium">Loading trips...</div>
-            ) : trips.length === 0 ? (
-              <div className="text-center py-12 bg-white dark:bg-[#160a0f] border border-dashed border-rose-200 dark:border-rose-900 rounded-3xl p-6">
-                <Compass className="w-12 h-12 text-rose-800/40 dark:text-rose-400/40 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-rose-950 dark:text-rose-100">No trips planned yet</h3>
-                <p className="text-xs sm:text-sm text-rose-900/60 dark:text-rose-400/60 max-w-sm mx-auto mt-1 mb-4">
-                  Let our 11 AI agents craft your dream itinerary in under 60 seconds.
-                </p>
-                <Link
-                  href="/planner"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-rose-950 to-rose-800 text-white rounded-xl text-xs font-bold shadow hover:from-rose-900 hover:to-rose-700"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Start Planning</span>
-                </Link>
-              </div>
-            ) : (
-              trips.map((trip) => (
-                <div
-                  key={trip.id}
-                  className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl overflow-hidden hover:shadow-md transition-all flex flex-col sm:flex-row"
-                >
-                  <div className="sm:w-48 h-36 sm:h-auto relative bg-rose-50 dark:bg-[#1c0d13] shrink-0">
-                    {trip.heroImageUrl ? (
-                      <Image
-                        src={trip.heroImageUrl}
-                        alt={trip.destination}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 192px"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-rose-900/40 dark:text-rose-400/40">
-                        <MapPin className="w-8 h-8" />
-                      </div>
-                    )}
-                    <span className="absolute top-2 left-2 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-white/90 dark:bg-[#160a0f]/90 text-rose-950 dark:text-rose-200 backdrop-blur-sm shadow-2xs">
-                      {trip.totalDays} Days
-                    </span>
+            {trips.map((trip) => (
+              <div
+                key={trip.id}
+                className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl overflow-hidden hover:shadow-md transition-all flex flex-col sm:flex-row group"
+              >
+                <div className="sm:w-52 h-44 sm:h-auto relative bg-rose-950 dark:bg-[#1c0d13] shrink-0 overflow-hidden">
+                  <DestinationArtwork
+                    destination={trip.destination}
+                    title={trip.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[11px] font-black bg-white/95 dark:bg-[#160a0f]/95 text-rose-950 dark:text-rose-200 border border-rose-200/80 dark:border-rose-900/50 backdrop-blur-sm shadow-2xs">
+                    {trip.totalDays} Days
+                  </span>
+                </div>
+
+                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-black text-base sm:text-lg text-rose-950 dark:text-rose-100 group-hover:text-rose-800 dark:group-hover:text-rose-300 transition-colors">
+                        {trip.title}
+                      </h3>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        {trip.status}
+                      </span>
+                    </div>
+                    <p className="text-xs text-rose-900/70 dark:text-rose-400/70 mt-1.5 flex flex-wrap items-center gap-1.5 font-medium">
+                      <MapPin className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400 shrink-0" />
+                      <span>{trip.origin} &rarr; {trip.destination}</span>
+                      <span className="mx-1">•</span>
+                      <Clock className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400 shrink-0" />
+                      <span>{trip.startDate} to {trip.endDate}</span>
+                    </p>
                   </div>
 
-                  <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="font-black text-sm sm:text-base text-rose-950 dark:text-rose-100">
-                          {trip.title}
-                        </h3>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-                          {trip.status}
-                        </span>
-                      </div>
-                      <p className="text-xs text-rose-900/60 dark:text-rose-400/60 mt-1 flex flex-wrap items-center gap-1.5 font-medium">
-                        <MapPin className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400 shrink-0" />
-                        <span>{trip.origin} &rarr; {trip.destination}</span>
-                        <span className="mx-0.5">•</span>
-                        <Clock className="w-3.5 h-3.5 text-rose-700 dark:text-rose-400 shrink-0" />
-                        <span>{trip.startDate} to {trip.endDate}</span>
-                      </p>
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-[#33151f] flex flex-wrap items-center justify-between gap-2">
+                    <div className="text-xs">
+                      <span className="text-rose-900/60 dark:text-rose-400/60 font-medium">Est. Budget: </span>
+                      <span className="font-black text-rose-950 dark:text-rose-100 text-sm">
+                        ${trip.totalEstimatedCost?.toLocaleString()}
+                      </span>
+                      <span className="text-rose-900/40 dark:text-rose-400/40 text-[10px]"> / ${trip.budgetLimit?.toLocaleString()}</span>
                     </div>
 
-                    <div className="mt-4 pt-3 border-t border-rose-100 dark:border-rose-950 flex flex-wrap items-center justify-between gap-2">
-                      <div className="text-xs">
-                        <span className="text-rose-900/60 dark:text-rose-400/60 font-medium">Est. Budget: </span>
-                        <span className="font-black text-rose-950 dark:text-rose-100">
-                          ${trip.totalEstimatedCost?.toLocaleString()}
-                        </span>
-                        <span className="text-rose-900/40 dark:text-rose-400/40 text-[10px]"> / ${trip.budgetLimit?.toLocaleString()}</span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <Link
-                          href={`/itinerary/${trip.id}`}
-                          className="px-3 py-1.5 text-xs font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors"
-                        >
-                          Itinerary
-                        </Link>
-                        <Link
-                          href={`/map/${trip.id}`}
-                          className="px-3 py-1.5 text-xs font-bold bg-rose-50/50 dark:bg-rose-950/30 text-rose-900/80 dark:text-rose-300 rounded-lg hover:bg-rose-100/50 transition-colors"
-                        >
-                          Map
-                        </Link>
-                        <Link
-                          href={`/budget/${trip.id}`}
-                          className="px-3 py-1.5 text-xs font-bold bg-rose-50/50 dark:bg-rose-950/30 text-rose-900/80 dark:text-rose-300 rounded-lg hover:bg-rose-100/50 transition-colors"
-                        >
-                          Budget
-                        </Link>
-                      </div>
+                    <div className="flex items-center gap-2">
+                      <Link
+                        href={`/itinerary/${trip.id}`}
+                        className="px-3.5 py-1.5 text-xs font-bold bg-rose-50 dark:bg-rose-950/60 text-rose-900 dark:text-rose-200 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/50 transition-colors border border-rose-200/50 dark:border-rose-900/30"
+                      >
+                        Itinerary
+                      </Link>
+                      <Link
+                        href={`/map/${trip.id}`}
+                        className="px-3.5 py-1.5 text-xs font-bold bg-slate-100 dark:bg-[#200d14] text-slate-700 dark:text-slate-300 rounded-lg hover:bg-rose-50 dark:hover:bg-[#33151f] transition-colors"
+                      >
+                        Map
+                      </Link>
+                      <Link
+                        href={`/budget/${trip.id}`}
+                        className="px-3.5 py-1.5 text-xs font-bold bg-slate-100 dark:bg-[#200d14] text-slate-700 dark:text-slate-300 rounded-lg hover:bg-rose-50 dark:hover:bg-[#33151f] transition-colors"
+                      >
+                        Budget
+                      </Link>
                     </div>
                   </div>
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Right Column: AI Multi-Agent Engine Telemetry & Chat Quick Launch */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-[#160a0f] border border-rose-100/90 dark:border-rose-950/80 rounded-2xl p-5 shadow-2xs space-y-4 transition-colors">
+          <div className="bg-white dark:bg-[#160a0f] border border-slate-200 dark:border-[#33151f] rounded-2xl p-5 shadow-2xs space-y-4 transition-colors">
             <div className="flex items-center justify-between">
               <h3 className="font-black text-xs sm:text-sm text-rose-950 dark:text-rose-100 flex items-center gap-2">
                 <Bot className="w-4 h-4 text-rose-700 dark:text-rose-400" />
@@ -349,7 +398,7 @@ export default function DashboardPage() {
               ].map((agent, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between text-xs p-2 rounded-xl bg-rose-50/50 dark:bg-[#1e0e14]/60"
+                  className="flex items-center justify-between text-xs p-2 rounded-xl bg-rose-50/50 dark:bg-[#1e0e14]/60 border border-rose-100/60 dark:border-rose-950/40"
                 >
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
@@ -360,7 +409,7 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            <div className="pt-2 border-t border-rose-100 dark:border-rose-950 flex items-center justify-between text-xs text-rose-900/60 dark:text-rose-400/60 font-medium">
+            <div className="pt-2 border-t border-slate-100 dark:border-[#33151f] flex items-center justify-between text-xs text-rose-900/60 dark:text-rose-400/60 font-medium">
               <span className="flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                 <span>Critic audit active</span>

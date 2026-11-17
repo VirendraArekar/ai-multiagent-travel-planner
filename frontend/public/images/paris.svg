@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="parisSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4c0519"/>
+      <stop offset="40%" stop-color="#881337"/>
+      <stop offset="70%" stop-color="#be123c"/>
+      <stop offset="100%" stop-color="#fda4af"/>
+    </linearGradient>
+    <linearGradient id="parisSun" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff1f2"/>
+      <stop offset="100%" stop-color="#f43f5e"/>
+    </linearGradient>
+    <linearGradient id="eiffelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1c0710"/>
+      <stop offset="100%" stop-color="#4c0519"/>
+    </linearGradient>
+  </defs>
+  <!-- Background sky -->
+  <rect width="800" height="500" fill="url(#parisSky)"/>
+  <!-- Glowing sun/moon -->
+  <circle cx="560" cy="180" r="90" fill="url(#parisSun)" opacity="0.85"/>
+  <!-- Distant Paris city silhouettes -->
+  <path d="M0,450 L40,430 L80,440 L120,410 L160,435 L220,420 L270,445 L320,400 L350,440 L430,420 L480,440 L540,415 L600,435 L680,410 L740,430 L800,425 L800,500 L0,500 Z" fill="#2a0815" opacity="0.7"/>
+  <!-- Seine River reflection -->
+  <rect y="440" width="800" height="60" fill="#1c050f"/>
+  <path d="M0,445 Q200,455 400,445 T800,448 L800,500 L0,500 Z" fill="#2d0a18" opacity="0.8"/>
+  <path d="M520,450 Q560,470 600,450" stroke="#fda4af" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M500,465 Q560,485 620,465" stroke="#fda4af" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Eiffel Tower Silhouette -->
+  <!-- Spire -->
+  <line x1="400" y1="50" x2="400" y2="120" stroke="#12030a" stroke-width="4"/>
+  <circle cx="400" cy="50" r="4" fill="#ffd1d9"/>
+  <!-- Top section -->
+  <polygon points="396,120 404,120 408,180 392,180" fill="url(#eiffelGrad)"/>
+  <!-- Platform 1 -->
+  <rect x="386" y="180" width="28" height="6" rx="2" fill="#12030a"/>
+  <!-- Mid section -->
+  <polygon points="390,186 410,186 422,290 378,290" fill="url(#eiffelGrad)"/>
+  <line x1="390" y1="186" x2="422" y2="290" stroke="#3d0a1d" stroke-width="1.5"/>
+  <line x1="410" y1="186" x2="378" y2="290" stroke="#3d0a1d" stroke-width="1.5"/>
+  <!-- Platform 2 -->
+  <rect x="368" y="290" width="64" height="8" rx="2" fill="#12030a"/>
+  <!-- Base arch & pillars -->
+  <path d="M374,298 L340,450 L365,450 L382,350 Q400,320 418,350 L435,450 L460,450 L426,298 Z" fill="url(#eiffelGrad)"/>
+  <!-- Arch curve -->
+  <path d="M372,450 Q400,380 428,450" fill="#2d0a18" opacity="0.5"/>
+  <path d="M372,450 Q400,380 428,450" stroke="#12030a" stroke-width="3" fill="none"/>
+  <!-- Foreground bridge & trees -->
+  <path d="M0,470 Q200,465 400,470 T800,468 L800,500 L0,500 Z" fill="#12030a"/>
+  <!-- Trees -->
+  <circle cx="120" cy="455" r="25" fill="#1f0612"/>
+  <circle cx="150" cy="460" r="20" fill="#15030c"/>
+  <circle cx="680" cy="458" r="28" fill="#1f0612"/>
+  <circle cx="720" cy="462" r="22" fill="#15030c"/>
+  <!-- Label badge overlay -->
+  <text x="35" y="65" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="900" fill="#ffffff" letter-spacing="1.5">PARIS, FRANCE</text>
+  <text x="35" y="92" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="600" fill="#fecdd3" letter-spacing="0.5">The City of Light • Art, Wine & Architecture</text>
+</svg>

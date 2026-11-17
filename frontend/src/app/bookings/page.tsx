@@ -18,10 +18,79 @@ import { api } from '@/lib/api';
 import { Booking } from '@/types';
 import { useToast } from '@/context/ToastContext';
 
+const INITIAL_BOOKINGS: Booking[] = [
+  {
+    id: 'bk-1',
+    tripId: 'trip-paris-1',
+    userId: 'u-demo',
+    bookingType: 'FLIGHT',
+    provider: 'Air France',
+    bookingReference: 'AF-782910',
+    status: 'CONFIRMED',
+    itemTitle: 'Flight AF007 (JFK - CDG Nonstop)',
+    startDatetime: '2026-06-10 19:30',
+    endDatetime: '2026-06-11 08:45',
+    totalPrice: 680,
+    currency: 'USD',
+    cancellationPolicy: 'Free cancellation within 24h of purchase',
+    providerLink: 'https://airfrance.com',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'bk-2',
+    tripId: 'trip-paris-1',
+    userId: 'u-demo',
+    bookingType: 'HOTEL',
+    provider: 'Booking.com',
+    bookingReference: 'BK-992381',
+    status: 'CONFIRMED',
+    itemTitle: 'Le Grand Quartier Boutique Hotel (5 Nights)',
+    startDatetime: '2026-06-11 15:00',
+    endDatetime: '2026-06-16 11:00',
+    totalPrice: 1050,
+    currency: 'EUR',
+    cancellationPolicy: 'Free cancellation until 48 hours before check-in',
+    providerLink: 'https://booking.com',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'bk-3',
+    tripId: 'trip-paris-1',
+    userId: 'u-demo',
+    bookingType: 'ACTIVITY',
+    provider: 'GetYourGuide',
+    bookingReference: 'GYG-44120',
+    status: 'CONFIRMED',
+    itemTitle: 'Louvre Museum Timed-Entry Ticket',
+    startDatetime: '2026-06-12 10:00',
+    totalPrice: 44,
+    currency: 'EUR',
+    cancellationPolicy: 'Full refund 24h prior',
+    providerLink: 'https://getyourguide.com',
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'bk-4',
+    tripId: 'trip-paris-1',
+    userId: 'u-demo',
+    bookingType: 'TRANSPORT',
+    provider: 'RATP Paris',
+    bookingReference: 'RATP-NAV-5D',
+    status: 'CONFIRMED',
+    itemTitle: 'Paris Visite Metro Pass 5-Day Zones 1-5',
+    startDatetime: '2026-06-10 09:00',
+    totalPrice: 75,
+    currency: 'EUR',
+    cancellationPolicy: 'Non-refundable after activation',
+    providerLink: 'https://ratp.fr',
+    createdAt: new Date().toISOString(),
+  }
+];
+
 export default function BookingsPage() {
   const { toast } = useToast();
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [bookings, setBookings] = useState<Booking[]>(INITIAL_BOOKINGS);
+  const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
 
   // New booking state
